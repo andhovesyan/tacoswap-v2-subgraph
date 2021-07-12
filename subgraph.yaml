@@ -1,23 +1,63 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
+description: Tacoswap is a decentralized protocol for automated token exchange on Ethereum.
+repository: https://github.com/andhovesyan/tacoswap-v2-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: TacoswapV2Factory
+    name: Factory
     network: mainnet
     source:
-      address: "0x88461aDDA3E00698eEF255395e692EC89CdE5014"
-      abi: TacoswapV2Factory
+      address: '0x88461aDDA3E00698eEF255395e692EC89CdE5014'
+      abi: Factory
+      startBlock: 12722107
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
+      file: ./src/mappings/factory.ts
       entities:
-        - PairCreated
+        - Pair
+        - Token
       abis:
-        - name: TacoswapV2Factory
-          file: ./abis/TacoswapV2Factory.json
+        - name: Factory
+          file: ./abis/factory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
       eventHandlers:
         - event: PairCreated(indexed address,indexed address,address,uint256)
-          handler: handlePairCreated
-      file: ./src/mapping.ts
+          handler: handleNewPair
+templates:
+  - kind: ethereum/contract
+    name: Pair
+    network: mainnet
+    source:
+      abi: Pair
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/core.ts
+      entities:
+        - Pair
+        - Token
+      abis:
+        - name: Pair
+          file: ./abis/pair.json
+        - name: Factory
+          file: ./abis/factory.json
+      eventHandlers:
+        - event: Mint(indexed address,uint256,uint256)
+          handler: handleMint
+        - event: Burn(indexed address,uint256,uint256,indexed address)
+          handler: handleBurn
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Sync(uint112,uint112)
+          handler: handleSync

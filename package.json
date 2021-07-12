@@ -2,7 +2,7 @@
   "name": "tacoswap",
   "license": "UNLICENSED",
   "scripts": {
-    "codegen": "graph codegen",
+    "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ tacoswap",
     "create-local": "graph create --node http://localhost:8020/ tacoswap",
@@ -10,7 +10,13 @@
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 tacoswap"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.21.0",
-    "@graphprotocol/graph-ts": "0.20.0"
+    "@graphprotocol/graph-cli": "^0.16.0",
+    "@graphprotocol/graph-ts": "^0.16.0",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "eslint": "^6.2.2",
+    "eslint-config-prettier": "^6.1.0",
+    "prettier": "^1.18.2",
+    "typescript": "^3.5.2"
   }
 }
